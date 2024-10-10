@@ -1,17 +1,26 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 )
 
 func main() {
 
-	// ServeMux := http.NewServeMux()
+	serveMux := http.NewServeMux()
 
-	Server := &http.Server{
-		Handler: nil,
+	serveMux.Handle("/", http.FileServer(http.Dir(".")))
+
+	server := &http.Server{
+		Handler: serveMux,
 		Addr:    ":8080",
 	}
 
-	Server.ListenAndServe()
+	fmt.Println("Starting server now")
+
+	err := server.ListenAndServe()
+
+	if err != nil {
+		fmt.Println("Something went wrong")
+	}
 }
